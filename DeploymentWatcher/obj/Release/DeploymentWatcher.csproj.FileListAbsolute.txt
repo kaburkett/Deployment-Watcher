@@ -1,0 +1,7 @@
+c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\bin\Release\DeploymentWatcher.exe.config
+c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\bin\Release\DeploymentWatcher.exe
+c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\bin\Release\DeploymentWatcher.pdb
+c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.exe
+c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.pdb
+c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.ProjectInstaller.resources
+c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.csproj.GenerateResource.Cache
