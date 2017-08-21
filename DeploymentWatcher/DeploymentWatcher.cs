@@ -49,11 +49,12 @@ namespace DeploymentWatcher
             FileStream fs = new FileStream(DeploymentWatcherService.temp_log_path, FileMode.Create);
             fs.Close();
             
-            DeploymentWatcherService.NewEventLog("Change detected! Command about to run: " + batchPath +" /Y", true);
+            DeploymentWatcherService.NewEventLog("Running: cmd.exe /c " + batchPath +" /Y", true);
             ExecuteCommand(batchPath);
 
             //delete all files in directory
             DeploymentWatcherService.NewEventLog("Delete contents: " + directoryToWatch, true);
+            Directory.Delete(directoryToWatch, true);
             System.IO.DirectoryInfo di = new DirectoryInfo(directoryToWatch);
             foreach (FileInfo file in di.GetFiles())
             {
@@ -63,6 +64,7 @@ namespace DeploymentWatcher
             {
                 dir.Delete(true);
             }
+            Directory.CreateDirectory(directoryToWatch);
 
             //once directory is cleared out, move over the log file
             File.Move(DeploymentWatcherService.temp_log_path, DeploymentWatcherService.path + "\\DeploymentLog.log"); 
@@ -85,11 +87,11 @@ namespace DeploymentWatcher
             string outputData = null;
             string errorData = null;
             process.OutputDataReceived += (object sender, DataReceivedEventArgs e) =>
-                outputData += "output>> " + e.Data;    
+                outputData += "output>> " + e.Data +System.Environment.NewLine;    
             process.BeginOutputReadLine();
 
             process.ErrorDataReceived += (object sender, DataReceivedEventArgs e) =>
-                errorData += "error >>" + e.Data;
+                errorData += "error >> " + e.Data +System.Environment.NewLine;
             process.BeginErrorReadLine();
 
             process.WaitForExit();
