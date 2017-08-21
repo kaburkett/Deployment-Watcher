@@ -14,7 +14,7 @@ namespace DeploymentWatcher
     public partial class DeploymentWatcherService : ServiceBase
     {
         public static System.Diagnostics.EventLog eventLog;
-        public static string path = "C:\\testDeploymentPath";
+        public static string path = "C:\\DeploymentPath";
         public static string temp_log_path = "C:\\DeploymentWatcher\\temp.log";
 
         /* NewEventLog makes troubleshooting this service easier.

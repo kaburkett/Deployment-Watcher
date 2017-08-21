@@ -28,7 +28,6 @@ namespace DeploymentWatcher
                             NotifyFilters.FileName |
                             NotifyFilters.DirectoryName;
             watcher.Filter = "*.cmd";
-            watcher.Changed += new FileSystemEventHandler(OnChanged);
             watcher.Created += new FileSystemEventHandler(OnChanged);
             watcher.Renamed += new RenamedEventHandler(OnRenamed);
             watcher.Error += new ErrorEventHandler(OnError);
@@ -50,7 +49,7 @@ namespace DeploymentWatcher
             FileStream fs = new FileStream(DeploymentWatcherService.temp_log_path, FileMode.Create);
             fs.Close();
             
-            DeploymentWatcherService.NewEventLog("Change detected! Command about to run: " + batchPath, true);
+            DeploymentWatcherService.NewEventLog("Change detected! Command about to run: " + batchPath +" /Y", true);
             ExecuteCommand(batchPath);
 
             //delete all files in directory
@@ -76,24 +75,28 @@ namespace DeploymentWatcher
 
         static void ExecuteCommand(string command)
         {
-            var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command);
+            var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command + "/Y");
             processInfo.CreateNoWindow = true;
             processInfo.UseShellExecute = false;
             processInfo.RedirectStandardError = true;
             processInfo.RedirectStandardOutput = true;
 
             var process = Process.Start(processInfo);
-
+            string outputData = null;
+            string errorData = null;
             process.OutputDataReceived += (object sender, DataReceivedEventArgs e) =>
-                DeploymentWatcherService.NewEventLog("output>>" + e.Data, true);
+                outputData += "output>> " + e.Data;    
             process.BeginOutputReadLine();
 
             process.ErrorDataReceived += (object sender, DataReceivedEventArgs e) =>
-                DeploymentWatcherService.NewEventLog("error>>" + e.Data, true);
+                errorData += "error >>" + e.Data;
             process.BeginErrorReadLine();
 
             process.WaitForExit();
 
+            //write cmd output to text file
+            DeploymentWatcherService.NewEventLog("============== CONSOLE OUTPUT ============"+System.Environment.NewLine+outputData, true);
+            DeploymentWatcherService.NewEventLog("============== CONSOLE ERRORS ============"+System.Environment.NewLine+errorData, true);
             DeploymentWatcherService.NewEventLog("ExitCode: "+ process.ExitCode, true);
             process.Close();
         }
