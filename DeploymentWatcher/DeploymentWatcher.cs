@@ -31,16 +31,9 @@ namespace DeploymentWatcher
             watcher.Changed += new FileSystemEventHandler(OnChanged);
             watcher.Created += new FileSystemEventHandler(OnChanged);
             watcher.Renamed += new RenamedEventHandler(OnRenamed);
-            watcher.Disposed += Watcher_Disposed;
             watcher.Error += new ErrorEventHandler(OnError);
-            DeploymentWatcherService.NewEventLog("Watching initialized with path: " + directoryToWatch);
+            DeploymentWatcherService.NewEventLog("Watching initialized with path: " + directoryToWatch, false);
             
-        }
-
-        private void Watcher_Disposed(object sender, EventArgs e)
-        {
-            DeploymentWatcher watcher = new DeploymentWatcher(directoryToWatch);
-            watcher.Watch();
         }
         private void OnRenamed(object sender, RenamedEventArgs e)
         {
@@ -51,14 +44,18 @@ namespace DeploymentWatcher
             FindRunAndDelete(e.FullPath);
         }
 
-        private void FindRunAndDelete(string fullpath)
+        private void FindRunAndDelete(string batchPath)
         {
-            string batchPath = fullpath;
-            DeploymentWatcherService.NewEventLog("Change detected! Command about to run: " + batchPath);
+            //create new log file for each change detected
+            FileStream fs = new FileStream(DeploymentWatcherService.temp_log_path, FileMode.Create);
+            fs.Close();
+            
+            DeploymentWatcherService.NewEventLog("Change detected! Command about to run: " + batchPath, true);
             ExecuteCommand(batchPath);
-            DeploymentWatcherService.NewEventLog("Delete contents: " + directoryToWatch);
-            System.IO.DirectoryInfo di = new DirectoryInfo(directoryToWatch);
 
+            //delete all files in directory
+            DeploymentWatcherService.NewEventLog("Delete contents: " + directoryToWatch, true);
+            System.IO.DirectoryInfo di = new DirectoryInfo(directoryToWatch);
             foreach (FileInfo file in di.GetFiles())
             {
                 file.Delete();
@@ -67,11 +64,14 @@ namespace DeploymentWatcher
             {
                 dir.Delete(true);
             }
+
+            //once directory is cleared out, move over the log file
+            File.Move(DeploymentWatcherService.temp_log_path, DeploymentWatcherService.path + "\\DeploymentLog.log"); 
         }
 
         private static void OnError(object source, ErrorEventArgs e)
         {
-            DeploymentWatcherService.NewEventLog("Error Happened! Error: " + e);
+            DeploymentWatcherService.NewEventLog("Error Happened! Error: " + e, true);
         }
 
         static void ExecuteCommand(string command)
@@ -85,16 +85,16 @@ namespace DeploymentWatcher
             var process = Process.Start(processInfo);
 
             process.OutputDataReceived += (object sender, DataReceivedEventArgs e) =>
-                DeploymentWatcherService.NewEventLog("output>>" + e.Data);
+                DeploymentWatcherService.NewEventLog("output>>" + e.Data, true);
             process.BeginOutputReadLine();
 
             process.ErrorDataReceived += (object sender, DataReceivedEventArgs e) =>
-                DeploymentWatcherService.NewEventLog("error>>" + e.Data);
+                DeploymentWatcherService.NewEventLog("error>>" + e.Data, true);
             process.BeginErrorReadLine();
 
             process.WaitForExit();
 
-            DeploymentWatcherService.NewEventLog("ExitCode: {0}"+ process.ExitCode);
+            DeploymentWatcherService.NewEventLog("ExitCode: "+ process.ExitCode, true);
             process.Close();
         }
 
