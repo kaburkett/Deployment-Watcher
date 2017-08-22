@@ -54,17 +54,8 @@ namespace DeploymentWatcher
 
             //delete all files in directory
             DeploymentWatcherService.NewEventLog("Delete contents: " + directoryToWatch, true);
-            Directory.Delete(directoryToWatch, true);
-            System.IO.DirectoryInfo di = new DirectoryInfo(directoryToWatch);
-            foreach (FileInfo file in di.GetFiles())
-            {
-                file.Delete();
-            }
-            foreach (DirectoryInfo dir in di.GetDirectories())
-            {
-                dir.Delete(true);
-            }
-            Directory.CreateDirectory(directoryToWatch);
+            DeleteDirectory(DeploymentWatcherService.path);
+            Directory.CreateDirectory(DeploymentWatcherService.path);
 
             //once directory is cleared out, move over the log file
             File.Move(DeploymentWatcherService.temp_log_path, DeploymentWatcherService.path + "\\DeploymentLog.log"); 
@@ -78,6 +69,7 @@ namespace DeploymentWatcher
         static void ExecuteCommand(string command)
         {
             var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command + "/Y");
+            processInfo.WorkingDirectory = "C:\\Windows\\system32";
             processInfo.CreateNoWindow = true;
             processInfo.UseShellExecute = false;
             processInfo.RedirectStandardError = true;
@@ -101,6 +93,32 @@ namespace DeploymentWatcher
             DeploymentWatcherService.NewEventLog("============== CONSOLE ERRORS ============"+System.Environment.NewLine+errorData, true);
             DeploymentWatcherService.NewEventLog("ExitCode: "+ process.ExitCode, true);
             process.Close();
+        }
+
+        /// <summary>
+        /// Depth-first recursive delete, with handling for descendant 
+        /// directories open in Windows Explorer. 
+        /// (I took this from SO for complete recursive delete)
+        /// </summary>
+        public static void DeleteDirectory(string path)
+        {
+            foreach (string directory in Directory.GetDirectories(path))
+            {
+                DeleteDirectory(directory);
+            }
+
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch (IOException)
+            {
+                Directory.Delete(path, true);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Directory.Delete(path, true);
+            }
         }
 
     }
