@@ -43,19 +43,26 @@ namespace DeploymentWatcher
             FindRunAndDelete(e.FullPath);
         }
 
-        private void FindRunAndDelete(string batchPath)
+        private void FindRunAndDelete(string cmdPath)
         {
             //create new log file for each change detected
             FileStream fs = new FileStream(DeploymentWatcherService.temp_log_path, FileMode.Create);
             fs.Close();
             
-            DeploymentWatcherService.NewEventLog("Running: cmd.exe /c " + batchPath +" /Y", true);
-            ExecuteCommand(batchPath);
+            DeploymentWatcherService.NewEventLog("Running: cmd.exe /c " + cmdPath +" /Y", true);
+            ExecuteCommand(cmdPath);
 
             //delete all files in directory
             DeploymentWatcherService.NewEventLog("Delete contents: " + directoryToWatch, true);
-            DeleteDirectory(DeploymentWatcherService.path);
-            Directory.CreateDirectory(DeploymentWatcherService.path);
+            try
+            {
+                DeleteDirectory(DeploymentWatcherService.path);
+                Directory.CreateDirectory(DeploymentWatcherService.path);
+            }
+            catch(Exception e)
+            {
+                DeploymentWatcherService.NewEventLog("Error removing directory, please remove manually: " +System.Environment.NewLine+ e, true);
+            }
 
             //once directory is cleared out, move over the log file
             File.Move(DeploymentWatcherService.temp_log_path, DeploymentWatcherService.path + "\\DeploymentLog.log"); 
@@ -66,10 +73,12 @@ namespace DeploymentWatcher
             DeploymentWatcherService.NewEventLog("Error Happened! Error: " + e, true);
         }
 
-        static void ExecuteCommand(string command)
+        static void ExecuteCommand(string cmdPath)
         {
-            var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command + "/Y");
+            var processInfo = new ProcessStartInfo();          
             processInfo.WorkingDirectory = "C:\\Windows\\system32";
+            processInfo.FileName = "cmd.exe";
+            processInfo.Arguments = @"/c " + cmdPath + " /Y";
             processInfo.CreateNoWindow = true;
             processInfo.UseShellExecute = false;
             processInfo.RedirectStandardError = true;
@@ -81,17 +90,24 @@ namespace DeploymentWatcher
             process.OutputDataReceived += (object sender, DataReceivedEventArgs e) =>
                 outputData += "output>> " + e.Data +System.Environment.NewLine;    
             process.BeginOutputReadLine();
-
             process.ErrorDataReceived += (object sender, DataReceivedEventArgs e) =>
                 errorData += "error >> " + e.Data +System.Environment.NewLine;
             process.BeginErrorReadLine();
-
             process.WaitForExit();
 
             //write cmd output to text file
             DeploymentWatcherService.NewEventLog("============== CONSOLE OUTPUT ============"+System.Environment.NewLine+outputData, true);
             DeploymentWatcherService.NewEventLog("============== CONSOLE ERRORS ============"+System.Environment.NewLine+errorData, true);
-            DeploymentWatcherService.NewEventLog("ExitCode: "+ process.ExitCode, true);
+            DeploymentWatcherService.NewEventLog("============== DEPLOY RESULTS ============" + System.Environment.NewLine + errorData, true);
+            if (process.ExitCode == 0)
+            {
+                DeploymentWatcherService.NewEventLog("Deployment Successful", true);
+            }
+            else
+            {
+                DeploymentWatcherService.NewEventLog("Deployment Failed With ExitCode: " + process.ExitCode, true);
+            }
+
             process.Close();
         }
 
@@ -102,6 +118,10 @@ namespace DeploymentWatcher
         /// </summary>
         public static void DeleteDirectory(string path)
         {
+            foreach (string file in Directory.GetFiles(path))
+            {
+                File.Delete(file);
+            }
             foreach (string directory in Directory.GetDirectories(path))
             {
                 DeleteDirectory(directory);
