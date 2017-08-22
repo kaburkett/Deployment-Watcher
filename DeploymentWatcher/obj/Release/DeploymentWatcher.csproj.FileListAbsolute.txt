@@ -5,4 +5,3 @@ c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\De
 c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.pdb
 c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.ProjectInstaller.resources
 c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.csproj.GenerateResource.Cache
-C:\Users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.csprojResolveAssemblyReference.cache
