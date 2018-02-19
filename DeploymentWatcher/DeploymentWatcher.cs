@@ -93,7 +93,7 @@ namespace DeploymentWatcher
             process.ErrorDataReceived += (object sender, DataReceivedEventArgs e) =>
                 errorData += "error >> " + e.Data +System.Environment.NewLine;
             process.BeginErrorReadLine();
-            process.WaitForExit();
+            process.WaitForExit(900000);
 
             //write cmd output to text file
             DeploymentWatcherService.NewEventLog("============== CONSOLE OUTPUT ============"+System.Environment.NewLine+outputData, true);

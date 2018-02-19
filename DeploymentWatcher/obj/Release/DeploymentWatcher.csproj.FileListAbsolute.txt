@@ -5,3 +5,12 @@ c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\De
 c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.pdb
 c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.ProjectInstaller.resources
 c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.csproj.GenerateResource.Cache
+U:\Kyle\deploymentwatcher\DeploymentWatcher\bin\Release\DeploymentWatcher.exe.config
+U:\Kyle\deploymentwatcher\DeploymentWatcher\bin\Release\DeploymentWatcher.exe
+U:\Kyle\deploymentwatcher\DeploymentWatcher\bin\Release\DeploymentWatcher.pdb
+U:\Kyle\deploymentwatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.csprojResolveAssemblyReference.cache
+U:\Kyle\deploymentwatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.ProjectInstaller.resources
+U:\Kyle\deploymentwatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.csproj.GenerateResource.Cache
+U:\Kyle\deploymentwatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.csproj.CoreCompileInputs.cache
+U:\Kyle\deploymentwatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.exe
+U:\Kyle\deploymentwatcher\DeploymentWatcher\obj\Release\DeploymentWatcher.pdb
