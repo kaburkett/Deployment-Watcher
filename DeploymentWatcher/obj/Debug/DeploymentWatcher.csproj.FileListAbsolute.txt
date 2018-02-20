@@ -1,6 +1,0 @@
-c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\obj\Debug\DeploymentWatcher.csprojResolveAssemblyReference.cache
-c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\bin\Debug\DeploymentWatcher.exe.config
-c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\bin\Debug\DeploymentWatcher.exe
-c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\bin\Debug\DeploymentWatcher.pdb
-c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\obj\Debug\DeploymentWatcher.exe
-c:\users\kyleaburkett\documents\visual studio 2017\Projects\DeploymentWatcher\DeploymentWatcher\obj\Debug\DeploymentWatcher.pdb
