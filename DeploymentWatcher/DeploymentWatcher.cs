@@ -70,7 +70,10 @@ namespace DeploymentWatcher
 
         private static void OnError(object source, ErrorEventArgs e)
         {
-            DeploymentWatcherService.NewEventLog("Error Happened! Error: " + e, true);
+            DeploymentWatcherService.NewEventLog("Error Happened! Error: " + e.GetException().ToString(), true);
+
+            //once directory is cleared out, move over the log file
+            File.Move(DeploymentWatcherService.temp_log_path, DeploymentWatcherService.path + "\\ErrorLog.log");
         }
 
         static void ExecuteCommand(string cmdPath)
