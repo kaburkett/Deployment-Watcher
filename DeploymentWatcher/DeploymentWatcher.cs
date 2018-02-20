@@ -119,7 +119,8 @@ namespace DeploymentWatcher
                 DeploymentWatcherService.NewEventLog("============== CONSOLE OUTPUT ============" + System.Environment.NewLine + outputData, true);
                 DeploymentWatcherService.NewEventLog("============== CONSOLE ERRORS ============" + System.Environment.NewLine + errorData, true);
                 DeploymentWatcherService.NewEventLog("============== DEPLOY RESULTS ============" + System.Environment.NewLine + errorData, true);
-                DeploymentWatcherService.NewEventLog("Deployment Timed Out (it took more than 7 mintues, so it was forced close).", true);
+                DeploymentWatcherService.NewEventLog("Deployment Timed Out (it took more than 7 minutes, so it was closed with the force).", true);
+                DeploymentWatcherService.NewEventLog("                                                                         {٩ಠಠ}" + System.Environment.NewLine, true);
             }
 
             process.Close();
