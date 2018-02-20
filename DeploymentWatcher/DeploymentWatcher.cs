@@ -12,7 +12,7 @@ namespace DeploymentWatcher
     {
         FileSystemWatcher watcher;
         string directoryToWatch;
-
+        // Some of the variables used in this class are initialize in DeploymentWatcherService.cs
         public DeploymentWatcher(string path)
         {
             this.watcher = new FileSystemWatcher();
@@ -57,7 +57,6 @@ namespace DeploymentWatcher
             try
             {
                 DeleteDirectory(DeploymentWatcherService.path);
-                Directory.CreateDirectory(DeploymentWatcherService.path);
             }
             catch(Exception e)
             {
@@ -117,30 +116,18 @@ namespace DeploymentWatcher
         /// <summary>
         /// Depth-first recursive delete, with handling for descendant 
         /// directories open in Windows Explorer. 
-        /// (I took this from SO for complete recursive delete)
+        /// https://stackoverflow.com/questions/1288718/how-to-delete-all-files-and-folders-in-a-directory
         /// </summary>
         public static void DeleteDirectory(string path)
         {
-            foreach (string file in Directory.GetFiles(path))
+            System.IO.DirectoryInfo di = new DirectoryInfo(path);
+            foreach (FileInfo file in di.EnumerateFiles())
             {
-                File.Delete(file);
+                file.Delete();
             }
-            foreach (string directory in Directory.GetDirectories(path))
+            foreach (DirectoryInfo dir in di.EnumerateDirectories())
             {
-                DeleteDirectory(directory);
-            }
-
-            try
-            {
-                Directory.Delete(path, true);
-            }
-            catch (IOException)
-            {
-                Directory.Delete(path, true);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Directory.Delete(path, true);
+                dir.Delete(true);
             }
         }
 
