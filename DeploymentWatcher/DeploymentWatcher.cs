@@ -94,20 +94,32 @@ namespace DeploymentWatcher
             process.BeginOutputReadLine();
             process.ErrorDataReceived += (object sender, DataReceivedEventArgs e) =>
                 errorData += "error >> " + e.Data +System.Environment.NewLine;
-            process.BeginErrorReadLine();
-            process.WaitForExit(900000);
+            process.BeginErrorReadLine();            
 
-            //write cmd output to text file
-            DeploymentWatcherService.NewEventLog("============== CONSOLE OUTPUT ============"+System.Environment.NewLine+outputData, true);
-            DeploymentWatcherService.NewEventLog("============== CONSOLE ERRORS ============"+System.Environment.NewLine+errorData, true);
-            DeploymentWatcherService.NewEventLog("============== DEPLOY RESULTS ============" + System.Environment.NewLine + errorData, true);
-            if (process.ExitCode == 0)
+
+            if (process.WaitForExit(420000))
             {
-                DeploymentWatcherService.NewEventLog("Deployment Successful", true);
+                //write cmd output to text file
+                DeploymentWatcherService.NewEventLog("============== CONSOLE OUTPUT ============" + System.Environment.NewLine + outputData, true);
+                DeploymentWatcherService.NewEventLog("============== CONSOLE ERRORS ============" + System.Environment.NewLine + errorData, true);
+                DeploymentWatcherService.NewEventLog("============== DEPLOY RESULTS ============" + System.Environment.NewLine + errorData, true);
+
+                if (process.ExitCode == 0)
+                {
+                    DeploymentWatcherService.NewEventLog("Deployment Successful", true);
+                }
+                else
+                {
+                    DeploymentWatcherService.NewEventLog("Deployment Failed With ExitCode: " + process.ExitCode, true);
+                }
             }
             else
             {
-                DeploymentWatcherService.NewEventLog("Deployment Failed With ExitCode: " + process.ExitCode, true);
+                //write cmd output to text file
+                DeploymentWatcherService.NewEventLog("============== CONSOLE OUTPUT ============" + System.Environment.NewLine + outputData, true);
+                DeploymentWatcherService.NewEventLog("============== CONSOLE ERRORS ============" + System.Environment.NewLine + errorData, true);
+                DeploymentWatcherService.NewEventLog("============== DEPLOY RESULTS ============" + System.Environment.NewLine + errorData, true);
+                DeploymentWatcherService.NewEventLog("Deployment Timed Out (it took more than 7 mintues, so it was forced close).", true);
             }
 
             process.Close();
